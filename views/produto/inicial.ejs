@@ -1,0 +1,94 @@
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>
+                <%= titulo %>
+            </h4>
+            <p class="mb-0">&raquo; Consulte todos os produtos do sistema</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Inicial</a></li>
+            <li class="breadcrumb-item active"><a href="javascript:void(0)">Produtos</a></li>
+        </ol>
+    </div>
+</div>
+<!-- row -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                
+                <div class="basic-form flex-grow-1">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" placeholder="Digite para pesquisar...">
+                            </div>
+                            <div class="col-lg-2 mt-2 mt-lg-0">
+                                <button type="submit" class="btn btn-warning mb-2">Pesquisar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <a href="/produtos/criar" class="btn btn-primary mb-2">Adicionar Novo Produto</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-responsive-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome</th>
+                                <th>Preço</th>
+                                <th>Fornecedor</th>
+                                <th>Ativo</th>
+                                <th>Criado em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <% for( let index = 0; index < produtos.length; index++ ) { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><%= produtos[index].nome %></td>
+                                    <td><%= moneyFormat(produtos[index].preco) %></td>
+                                    <td><%= produtos[index]?.fornecedor?.nome ? produtos[index]?.fornecedor?.nome : '-' %></td>
+                                    <td>
+                                        <% if (produtos[index].ativo) { %>
+
+                                            <span class="badge badge-primary">Ativo</span>
+
+                                        <% } else { %>
+
+                                            <span class="badge badge-danger">Inativo</span>
+
+                                        <% } %>
+                                    </td>
+                                    <td><%= dateFormat(produtos[index].criadoEm) %></td>
+                                    <td>
+                                        <a href="/produtos/<%= produtos[index].id %>/editar" class="text-warning mr-1">
+                                            <i class="fa fa-pencil fa-lg"></i>
+                                        </a>
+                                        <a href="/produtos/<%= produtos[index].id %>/excluir" class="text-danger">
+                                            <i class="fa fa-trash fa-lg"></i>
+                                        </a>
+                                        
+                                        <a href="#" class="text-secondary remover" data-name="<%= produtos[index].nome %>" data-id="<%= produtos[index].id %>">
+                                            <i class="fa fa-trash fa-lg"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% } %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+<% const erros = validationErrors(locals.errors); %>
+<% const produto = locals.produto || {} %>
+<% const fornecedores = locals.fornecedores || [] %>
+
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>
+                <%= locals.titulo %>
+            </h4>
+            <p class="mb-0">&raquo; Adicionar novo produto</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Inicial</a></li>
+            <li class="breadcrumb-item"><a href="/produtos">Consulta de Produtos</a></li>
+            <li class="breadcrumb-item active"><a href="javascript:void(0)">Novo Produto</a></li>
+        </ol>
+    </div>
+</div>
+<!-- row -->
+<div class="row">
+    <div class="col-lg-12">
+
+        <% if (erros.all.length) { %>
+            <div class="alert alert-danger">
+              <h5>Não foi possível salvar</h5>
+              <ul>
+                <% erros.all.forEach((mensagem) => { %>
+                  <li><%= mensagem %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+
+        <div class="card">
+            <div class="card-body">
+                <form action="/produtos/<%= produto.id ? produto.id + '/editar' : 'criar' %>" method="POST">
+                    <div class="form-group mb-3">
+                        <label for="nome" class="form-label">Nome do Produto</label>
+                        <input type="text" class="form-control <%= erros.has('nome') ? 'is-invalid' : '' %>" 
+                            id="nome" name="nome" placeholder="Informe o nome do produto" value="<%= produto ? produto.nome : '' %>">
+
+                            <% if (erros.has('nome')) { %>
+                                <div class="invalid-feedback d-block">
+                                    <ul>
+                                        <% erros.get('nome').forEach((mensagem) => { %>
+                                            <li> <%= mensagem %> </li>
+                                        <% }) %>
+                                    </ul>   
+                                </div>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao"
+                            rows="4" placeholder="Informe a descrição do produto"><%= produto ? produto.descricao : '' %></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="preco" class="form-label">Preço</label>
+                            <input type="text" class="form-control" id="preco" name="preco" 
+                                placeholder="0.00" value="<%= locals.produto ? locals.produto.preco.replace('.', ',') : '' %>">
+                            
+                            <% if (erros.has('preco')) { %>
+                                <div class="invalid-feedback d-block">
+                                    <ul>
+                                        <% erros.get('preco').forEach((mensagem) => { %>
+                                            <li> <%= mensagem %> </li>
+                                        <% }) %>
+                                    </ul>   
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="quantidade" class="form-label">Quantidade</label>
+                            <input type="number" class="form-control" id="quantidade" name="quantidade" 
+                                placeholder="0" min="0" value="<%= produto ? produto.quantidade : '' %>">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-6 mb-3">
+
+                            <label for="ativo" class="form-label">Produto Ativo?</label>
+                            <select name="ativo" class="form-control">
+                                <option value="true" <%= produto.ativo ? 'selected' : '' %>>Ativo</option>
+                                <option value="false" <%= !produto.ativo ? 'selected' : '' %>>Inativo</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group col-md-6 mb-3">
+
+                            <label for="fornecedor" class="form-label">Fornecedor</label>
+                            <select name="fornecedor" class="form-control">
+                                <option value="">Selecione um fornecedor</option>
+
+                                <% fornecedores.forEach(fornecedor => { %>
+                                 
+                                    <option value="<%= fornecedor.id %>" <%= fornecedor.id == produto?.fornecedor?.id ? 'selected' : '' %> ><%= fornecedor.nome %></option>
+
+                                <% }) %>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary mr-2">Salvar Produto</button>
+                        <a href="/produtos" class="btn btn-warning">Cancelar</a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

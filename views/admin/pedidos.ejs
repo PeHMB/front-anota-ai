@@ -1,0 +1,478 @@
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Gestão de Pedidos em Tempo Real</h4>
+            <p class="mb-0">&raquo; Controle o fluxo de preparo e entrega do The Home Black</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Painel</a></li>
+            <li class="breadcrumb-item active"><a href="javascript:void(0)">Pedidos</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- Estilização customizada premium para o Kanban -->
+<style>
+    .kanban-board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        min-height: 600px;
+        align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+        .kanban-board {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .kanban-board {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .kanban-column {
+        background-color: #1c1c1e;
+        border: 1px solid #2c2c2e;
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .column-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #2c2c2e;
+        padding-bottom: 12px;
+        margin-bottom: 8px;
+    }
+
+    .column-title {
+        font-weight: 700;
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .column-badge {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    /* Cores das Colunas */
+    .col-pending { border-top: 4px solid #f3c25d; }
+    .col-pending .column-title { color: #f3c25d; }
+    .col-pending .column-badge { background-color: rgba(243, 194, 93, 0.15); color: #f3c25d; }
+
+    .col-preparing { border-top: 4px solid #e57c3b; }
+    .col-preparing .column-title { color: #e57c3b; }
+    .col-preparing .column-badge { background-color: rgba(229, 124, 59, 0.15); color: #e57c3b; }
+
+    .col-shipped { border-top: 4px solid #3b9fe5; }
+    .col-shipped .column-title { color: #3b9fe5; }
+    .col-shipped .column-badge { background-color: rgba(59, 159, 229, 0.15); color: #3b9fe5; }
+
+    .col-delivered { border-top: 4px solid #30d158; }
+    .col-delivered .column-title { color: #30d158; }
+    .col-delivered .column-badge { background-color: rgba(48, 209, 88, 0.15); color: #30d158; }
+
+    /* Cards do Kanban */
+    .order-card {
+        background-color: #2c2c2e;
+        border: 1px solid #3a3a3c;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: grab;
+    }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        border-color: #e5a93b;
+    }
+
+    .order-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-id {
+        font-weight: 700;
+        font-size: 14px;
+        color: #e5a93b;
+    }
+
+    .order-time {
+        font-size: 11px;
+        color: #a1a1a6;
+    }
+
+    .order-customer {
+        font-weight: 600;
+        font-size: 15px;
+        color: #ffffff;
+    }
+
+    .order-items {
+        font-size: 13px;
+        color: #d1d1d6;
+        line-height: 1.4;
+        background-color: #1c1c1e;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border-left: 3px solid #e5a93b;
+    }
+
+    .order-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #3a3a3c;
+        padding-top: 10px;
+        font-size: 13px;
+    }
+
+    .order-price {
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .order-payment {
+        color: #a1a1a6;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .order-btn {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-align: center;
+    }
+
+    .btn-accept { background-color: #f3c25d; color: #000; }
+    .btn-accept:hover { background-color: #e5b349; }
+
+    .btn-prepare { background-color: #e57c3b; color: #fff; }
+    .btn-prepare:hover { background-color: #d36a28; }
+
+    .btn-ship { background-color: #3b9fe5; color: #fff; }
+    .btn-ship:hover { background-color: #2a8cd2; }
+
+    .btn-archive { background-color: #30d158; color: #fff; }
+    .btn-archive:hover { background-color: #24b045; }
+
+    .btn-cancel { background-color: rgba(255, 69, 58, 0.15); color: #ff453a; }
+    .btn-cancel:hover { background-color: rgba(255, 69, 58, 0.25); }
+
+    /* Estado vazio */
+    .empty-state {
+        text-align: center;
+        padding: 30px 10px;
+        color: #8e8e93;
+        font-size: 12px;
+        border: 1px dashed #3a3a3c;
+        border-radius: 8px;
+    }
+</style>
+
+<!-- KANBAN BOARD CONTAINER -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="kanban-board">
+            
+            <!-- COLUNA: PENDENTES -->
+            <div class="kanban-column col-pending" id="col-pending">
+                <div class="column-header">
+                    <span class="column-title"><i class="fa-solid fa-bell"></i> Novos / Pendentes</span>
+                    <span class="column-badge" id="count-pending">0</span>
+                </div>
+                <div class="column-content" id="list-pending">
+                    <!-- Cards dinâmicos -->
+                </div>
+            </div>
+
+            <!-- COLUNA: EM PREPARAÇÃO -->
+            <div class="kanban-column col-preparing" id="col-preparing">
+                <div class="column-header">
+                    <span class="column-title"><i class="fa-solid fa-fire-burner"></i> Em Preparo</span>
+                    <span class="column-badge" id="count-preparing">0</span>
+                </div>
+                <div class="column-content" id="list-preparing">
+                    <!-- Cards dinâmicos -->
+                </div>
+            </div>
+
+            <!-- COLUNA: PRONTOS / DESPACHADOS -->
+            <div class="kanban-column col-shipped" id="col-shipped">
+                <div class="column-header">
+                    <span class="column-title"><i class="fa-solid fa-motorcycle"></i> Despachados</span>
+                    <span class="column-badge" id="count-shipped">0</span>
+                </div>
+                <div class="column-content" id="list-shipped">
+                    <!-- Cards dinâmicos -->
+                </div>
+            </div>
+
+            <!-- COLUNA: ENTREGUES -->
+            <div class="kanban-column col-delivered" id="col-delivered">
+                <div class="column-header">
+                    <span class="column-title"><i class="fa-solid fa-circle-check"></i> Entregues</span>
+                    <span class="column-badge" id="count-delivered">0</span>
+                </div>
+                <div class="column-content" id="list-delivered">
+                    <!-- Cards dinâmicos -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Script para controle do Kanban e integração via LocalStorage -->
+<script>
+    // Mock inicial de Pedidos se não houver dados no LocalStorage
+    const fallbackOrders = [
+        {
+            id: "#4910",
+            cliente: "Amanda Souza",
+            itens: "1x Smoked Honey Burger, 1x Coca-Cola Zero",
+            total: 48.50,
+            pagamento: "Pix",
+            hora: "21:15",
+            status: "pendente"
+        },
+        {
+            id: "#4909",
+            cliente: "Carlos Eduardo",
+            itens: "2x Black Diamond Burger, 1x Batata Rústica",
+            total: 102.30,
+            pagamento: "Cartão de Crédito",
+            hora: "20:58",
+            status: "preparo"
+        },
+        {
+            id: "#4908",
+            cliente: "Fernanda Lima",
+            itens: "1x Classic Black Burger, 1x Milkshake Nutella",
+            total: 52.80,
+            pagamento: "Dinheiro",
+            hora: "20:42",
+            status: "pronto"
+        }
+    ];
+
+    let orders = [];
+
+    // Carregar pedidos do LocalStorage ou fallback
+    function loadOrders() {
+        const stored = localStorage.getItem('thb_simulated_orders');
+        if (stored) {
+            orders = JSON.parse(stored);
+        } else {
+            orders = fallbackOrders;
+            localStorage.setItem('thb_simulated_orders', JSON.stringify(orders));
+        }
+        renderKanban();
+    }
+
+    // Formatação de Moeda
+    function formatMoney(value) {
+        return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    // Renderizar colunas do Kanban
+    function renderKanban() {
+        const lists = {
+            pendente: document.getElementById('list-pending'),
+            preparo: document.getElementById('list-preparing'),
+            pronto: document.getElementById('list-shipped'),
+            entregue: document.getElementById('list-delivered')
+        };
+
+        const counts = {
+            pendente: document.getElementById('count-pending'),
+            preparo: document.getElementById('count-preparing'),
+            pronto: document.getElementById('count-shipped'),
+            entregue: document.getElementById('count-delivered')
+        };
+
+        // Limpa listas
+        Object.keys(lists).forEach(key => {
+            lists[key].innerHTML = '';
+        });
+
+        // Contadores
+        const counter = { pendente: 0, preparo: 0, pronto: 0, entregue: 0 };
+
+        orders.forEach(order => {
+            const statusKey = order.status;
+            if (!lists[statusKey]) return;
+
+            counter[statusKey]++;
+
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            
+            // Ícone correspondente ao pagamento
+            let payIcon = '<i class="fa-solid fa-credit-card"></i>';
+            if (order.pagamento === 'Pix') payIcon = '<i class="fa-solid fa-qrcode"></i>';
+            if (order.pagamento === 'Dinheiro') payIcon = '<i class="fa-solid fa-money-bill-wave"></i>';
+
+            let actionButtons = '';
+            if (statusKey === 'pendente') {
+                actionButtons = `
+                    <div class="order-actions">
+                        <button class="order-btn btn-accept" onclick="changeStatus('${order.id}', 'preparo')"><i class="fa-solid fa-check"></i> Aceitar</button>
+                        <button class="order-btn btn-cancel" onclick="removeOrder('${order.id}')"><i class="fa-solid fa-xmark"></i> Recusar</button>
+                    </div>
+                `;
+            } else if (statusKey === 'preparo') {
+                actionButtons = `
+                    <div class="order-actions">
+                        <button class="order-btn btn-prepare" onclick="changeStatus('${order.id}', 'pronto')"><i class="fa-solid fa-truck"></i> Pronto / Despachar</button>
+                    </div>
+                `;
+            } else if (statusKey === 'pronto') {
+                actionButtons = `
+                    <div class="order-actions">
+                        <button class="order-btn btn-ship" onclick="changeStatus('${order.id}', 'entregue')"><i class="fa-solid fa-house-chimney-user"></i> Entregue</button>
+                    </div>
+                `;
+            } else if (statusKey === 'entregue') {
+                actionButtons = `
+                    <div class="order-actions">
+                        <button class="order-btn btn-archive" onclick="removeOrder('${order.id}')"><i class="fa-solid fa-box-archive"></i> Arquivar</button>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="order-card-header">
+                    <span class="order-id">${order.id}</span>
+                    <span class="order-time"><i class="fa-regular fa-clock"></i> ${order.hora}</span>
+                </div>
+                <div class="order-customer">${order.cliente}</div>
+                <div class="order-items">${order.itens}</div>
+                <div class="order-footer">
+                    <span class="order-price">${formatMoney(Number(order.total))}</span>
+                    <span class="order-payment">${payIcon} ${order.pagamento}</span>
+                </div>
+                ${actionButtons}
+            `;
+            lists[statusKey].appendChild(card);
+        });
+
+        // Atualiza Badges dos Cabeçalhos
+        Object.keys(counts).forEach(key => {
+            counts[key].innerText = counter[key];
+            if (counter[key] === 0) {
+                lists[key].innerHTML = `
+                    <div class="empty-state">
+                        Nenhum pedido nesta fase.
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // Alterar status de um pedido
+    window.changeStatus = function(orderId, newStatus) {
+        const index = orders.findIndex(o => o.id === orderId);
+        if (index > -1) {
+            orders[index].status = newStatus;
+            localStorage.setItem('thb_simulated_orders', JSON.stringify(orders));
+            renderKanban();
+
+            // Usando SweetAlert2 (que já está carregado no layout/main.ejs)
+            Swal.fire({
+                title: 'Pedido Atualizado!',
+                text: `Pedido ${orderId} movido para ${newStatus === 'preparo' ? 'Preparação' : newStatus === 'pronto' ? 'Despacho' : 'Entregues'}.`,
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    };
+
+    // Remover/Arquivar pedido
+    window.removeOrder = function(orderId) {
+        const title = orders.find(o => o.id === orderId)?.status === 'entregue' ? 'Arquivar Pedido' : 'Recusar Pedido';
+        const text = orders.find(o => o.id === orderId)?.status === 'entregue' ? 'Deseja arquivar este pedido?' : 'Tem certeza de que deseja recusar este pedido?';
+        
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e5a93b',
+            cancelButtonColor: '#3a3a3c',
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            background: '#1c1c1e',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                orders = orders.filter(o => o.id !== orderId);
+                localStorage.setItem('thb_simulated_orders', JSON.stringify(orders));
+                renderKanban();
+
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Ação realizada com sucesso.',
+                    icon: 'success',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        });
+    };
+
+    // Escuta eventos de Storage para recarregar se vier pedido no celular do mesmo navegador
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'thb_simulated_orders') {
+            loadOrders();
+        }
+    });
+
+    // Iniciar
+    window.addEventListener('DOMContentLoaded', loadOrders);
+</script>
