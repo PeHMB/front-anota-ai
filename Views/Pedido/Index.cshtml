@@ -1,0 +1,32 @@
+@model IEnumerable<anotaai.Models.PedidoModel>
+  <h1 class="font-bold text-lg">Pedidos</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+	<th>Cliente</th>
+	<th>Endereço</th>
+	<th>Itens</th>
+	<th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var pedido in Model)
+      {
+	<tr>
+	<td>@pedido.Cliente.Nome</td>
+	<td>@pedido.Cliente.Endereco</td>
+	<td>
+	<ul>
+	@foreach(var linha in pedido.LinhasPedido)
+	{
+	  <li>@linha.Produto.Nome</li>
+	}
+	</ul>
+	</td>
+	<td>R$ @pedido.ValorTotal()</td>
+	</tr>
+      }
+    </tbody>
+  </table>
+

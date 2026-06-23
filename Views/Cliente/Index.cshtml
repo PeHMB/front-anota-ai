@@ -1,0 +1,27 @@
+@model IEnumerable<anotaai.Models.ClienteModel>
+  <div class="bg-white m-6 p-6 rounded-2xl shadow-lg border border-gray-100">
+    <h1 class="font-bold text-xl mb-6">Clientes</h1>
+
+    <table class="table">
+      <thead>
+	<tr class="text-gray-500 border-b">
+	  <th>Nome</th>
+	  <th>CPF</th>
+	  <th>Endereço</th>
+	  <th>Ações</th>
+	</tr>
+      </thead>
+      <tbody>
+	@foreach(var cliente in Model)
+	{
+	<tr class="hover:bg-gray-50">
+	  <td>@cliente.Nome</td>
+	  <td>@cliente.Cpf</td>
+	  <td>@cliente.Endereco</td>
+	</tr>
+	  }
+      </tbody>
+    </table>
+
+  </div>
+

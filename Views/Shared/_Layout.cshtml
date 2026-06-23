@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AnotaAI</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  </head>
+
+  <body class="min-h-screen bg-indigo-50 flex  w-full">
+      <!-- MENU LATERAL -->
+      <aside class="w-64 bg-base-100 min-h-screen border-r border-base-200 p-5 flex flex-col">
+
+        <!-- LOGO -->
+        <div class="mb-8">
+          <a asp-controller="Home" asp-action="Index" class="text-2xl font-bold text-success">
+            AnotaAi
+          </a>
+        </div>
+
+
+        <nav class="flex-1 space-y-2">
+          <a asp-controller="Home" asp-action="Index" class="btn btn-ghost justify-start w-full">
+            Início
+          </a>
+
+          <a asp-controller="Produto" asp-action="Index" class="btn btn-ghost justify-start w-full">
+	    Produtos
+          </a>
+
+          <a asp-controller="Pedido" asp-action="Index" class="btn btn-ghost justify-start w-full">
+            Pedidos
+          </a>
+	  
+	  <a asp-controller="Cliente" asp-action="Index" class="btn btn-ghost justify-start w-full">
+            Clientes
+          </a>
+
+          <a asp-controller="Home" asp-action="Privacy" class="btn btn-ghost justify-start w-full">
+            Configurações
+          </a>
+        </nav>
+    
+      </aside>
+
+      <!-- ÁREA PRINCIPAL -->
+      <main class="w-full">
+	<div class="navbar bg-base-100 shadow-sm w-full">
+	  <div class="flex-1">
+	  </div>
+	  <div class="flex gap-2">
+	    <input type="text" placeholder="Pesquisar" class="input input-bordered w-24 md:w-auto" />
+	    <div class="dropdown dropdown-end">
+	      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+		<div class="w-[50px] h-[50px] rounded-full">
+		  <img
+		    alt="Tailwind CSS Navbar component"
+		    src="/images/culpadoJao.jpeg" />
+		</div>
+	      </div>
+	      <ul
+		tabindex="-1"
+		class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+		<li>
+		  <a class="justify-between">
+		    Perfil
+		    <span class="badge">New</span>
+		  </a>
+		</li>
+		<li><a>Configurar perfil</a></li>
+		<li><a>Sair</a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</div>
+
+        <!-- CONTEÚDO DAS PÁGINAS -->
+        @RenderBody()
+      </main>
+    @await RenderSectionAsync("Scripts", required: false)
+  </body>
+</html>
