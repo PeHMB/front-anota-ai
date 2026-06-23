@@ -1,8 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">teste</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+﻿﻿@model IEnumerable<anotaai.Models.ProdutoModel>
+  <div class="grid grid-cols-3">
+    @foreach(var produto in Model)
+    {
+      <div class="text-center">
+	<div class=" p-6 m-6 card bg-base-100 w-96 shadow-sm">
+	  <figure>
+	    <img
+	      src="https://static.photos/food/320x240?@produto.Nome"
+	      alt="Shoes" />
+	  </figure>
+	  <div class="card-body">
+	    <h2 class="card-title">@produto.Nome</h2>
+	    <p>@produto.Descricao</p>
+	    <div class="card-actions justify-end">
+	      <button class="btn btn-primary">Compre agora R$ @produto.Preco</button>
+	    </div>
+	  </div>
+	</div>
+      </div>
+    }
+  </div>

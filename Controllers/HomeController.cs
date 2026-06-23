@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using anotaai.Models;
+using anotaai.Contexts;
 
 namespace anotaai.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    public IActionResult Index([FromServices] CardapioContext db)
     {
-        return View();
+	var produtos = db.Produtos.ToList();
+        return View(produtos);
     }
 
     public IActionResult Privacy()
