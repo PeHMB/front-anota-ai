@@ -1,4 +1,7 @@
-﻿﻿@model IEnumerable<anotaai.Models.ProdutoModel>
+@model IEnumerable<anotaai.Models.ProdutoModel>
+  <h1 class="text-4xl md:text-5xl font-semibold text-gray-800">
+    Sua melhor refeição é <span class="text-emerald-600 font-bold">CONOSCO TODOS OS DIAS</span>
+  </h1>
   <div class="grid grid-cols-3">
     @foreach(var produto in Model)
     {
@@ -18,5 +21,39 @@
 	  </div>
 	</div>
       </div>
-    }
+	      }
+  </div>
+
+  <h2 class="text-3xl font-semibold text-gray-800">
+    <span class="text-emerald-700">FAVORITOS</span> da galera
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 m-6 p-6">
+    @foreach(var produto in Model)
+    {
+      <!-- Container principal do card -->
+      <div class="relative w-full h-[400px] rounded-3xl overflow-hidden shadow-xl cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+
+	<!-- Imagem de Fundo -->
+	<img src="https://static.photos/food/320x240?@produto.Nome" 
+             alt="@produto.Nome" 
+             class="absolute inset-0 w-full h-full object-cover" />
+
+	<!-- Gradiente para escurecer a imagem (melhora a legibilidade do texto) -->
+	<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+	<!-- Conteúdo (Texto) -->
+	<div class="absolute bottom-0 left-0 p-6 w-full text-white">
+          <span class="text-xs font-bold uppercase tracking-widest text-gray-300">Refeição</span>
+          <h2 class="text-xl font-bold mt-1">@produto.Nome</h2>
+	</div>
+
+	<!-- Ícone de Coração (simbólico, como na imagem) -->
+	<div class="absolute top-4 right-4">
+          <svg class="w-6 h-6 text-white hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+	</div>
+      </div>
+	  }
   </div>
