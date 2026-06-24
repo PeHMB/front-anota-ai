@@ -35,9 +35,11 @@ A API pode ser consumida por:
 
 ---
 
-## 📁 Estrutura do Projeto
+
 
 ```
+## 📁 Estrutura do Projeto
+
 DiscaAí/
 ├── Models/              # Classes de domínio (entidades)
 │   ├── ProdutoModel.cs
@@ -254,9 +256,4 @@ Nos endpoints de listagem (`GET /api/pedidos`), os dados relacionados são carre
 ```
 
 Isso garante que o JSON retornado já venha com **cliente, linhas e produtos aninhados**.
-
-## 📄 Licença
-
-Este projeto está sob a licença [MIT](LICENSE).
-```
 
